@@ -1,38 +1,72 @@
+const input = document.querySelector('input[name="input"]');//находим input
+const button = document.querySelector('.button'); // находим кнопку
 
-let input = document.querySelector('input[name="input"]');//находим input
-input.addEventListener("change", addInput); // создаем обработчик события по изменению значения input 
+//Алгоритм:
+//1. Как прочитатть массив?
+//2. Как вывести массив?
 let numbers = [];
 
-function addInput(){
-  while (true){
-    numbers.push(input.value);
-    input.value = ''; 
-    alert('Введите значение');
-    
+input.addEventListener("change", addInput); // создаем обработчик события по изменению значения input-смена фокуса
 
-    if (input.value === '' || !input.value === Number || button.onclick) break;
-    
-    }
-  
+button.addEventListener("click", sumNumbers); //создаем обработчик событий для вывода ссуммы
+button.addEventListener("click", sortNumbers); //создаем обработчик событий для сортировки
+
+function addInput(){
+  let inputNumber = Number(input.value); //перед тем как положить значение в массив проверяем, является ли оно числом
+
+
+  //ветка, когда у нас не число
+  if (Number.isNaN(inputNumber)){ //если значение NaN - те не число, выходим с помощью return
+    sumNumbers(); // когда мы пойдем по этой ветке мы хоти вывести сумму массива
+    return; // выход из функции / break выход из массива
   }
 
-let button = document.querySelector('.button'); // находим кнопку
-button.addEventListener("click", sortNumbers); //создаем обработчик событий для сортировки
-button.addEventListener("click", sumInput); //создаем обработчик событий для вывода ссуммы
+  //ветка, когда число
+  numbers.push(input.value); //добавляем в массив
+  input.value = ''; //после добавления в массив обнуляем инпут
+  printNumbers(); // вывод массива
+
+  
+ 
+}
+
+function printNumbers(){ //функция для вывода массива
+  let numbersArray = ''; //назначаем пременную, куда сначала будем записывать результаты, для всех алгоритмов суммы+ сначала очищаем результат куда кладем
+  
+  for (let i = 0; i < numbers.length; i++){ //метод перебора, чтобы вывести каждый элемент массива
+    let number = numbers[i]; //сохраняем индекс в переменную
+
+    if(i === numbers.length - 1) { //если это последний элемент
+      numbersArray += number + "."; //без += числа будут записываться в одно и тоже место, а не накапливаться, нахожденени "суммы строк"
+    } else {
+      numbersArray += number + ", ";
+    }  
+  }
+  document.querySelector('.numbers').textContent = numbersArray; // выводим данные в DOM один раз
+}
+
+
+//3. Как получить сумму этого массива?
+function sumNumbers(){
+  
+  let sum = 0;
+  for (let item of numbers){
+  sum += +item;
+  };
+  document.querySelector('.sumNumbers').textContent = sum;
+  }
+
+
+//4. Как отсортировать массив?
 
 function sortNumbers(){
-  let sortNumbers = document.querySelector('.sortNumbers'); //находим div куда будем складывать отсортированный массив
-  sortNumbers.textContent = numbers.sort();
+  let sortedNumbers = [...numbers]; //копируем исходный массив в массив для сортироки
+  sortedNumbers.sort(function(a, b){
+    return a - b;
+  });
+  document.querySelector('.sortNumbers').textContent = sortedNumbers + ", ";
   }
   
-function sumInput(){
-  let sumNumbers = document.querySelector('.sumNumbers');//находим div куда будем складывать сумму
-  let sum = 0;
-  for (let number of numbers){
-  sum = sum + number;
-  };
-  sumNumbers.textContent = sum;
-  }
 
 
       
